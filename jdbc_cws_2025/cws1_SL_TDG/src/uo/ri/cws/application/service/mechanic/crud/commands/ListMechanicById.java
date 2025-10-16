@@ -1,0 +1,26 @@
+package uo.ri.cws.application.service.mechanic.crud.commands;
+
+import java.util.Optional;
+
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway.MechanicRecord;
+import uo.ri.cws.application.persistence.mechanic.impl.MechanicGatewayImpl;
+import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
+import uo.ri.cws.application.service.mechanic.crud.MechanicAssembler;
+import uo.ri.util.assertion.ArgumentChecks;
+import uo.ri.util.exception.BusinessException;
+
+public class ListMechanicById {
+
+    private String id;
+
+    public ListMechanicById(String id) {
+        ArgumentChecks.isNotEmpty(id, "Mechanic NIF cannot be null or empty");
+        this.id = id;
+    }
+
+    public Optional<MechanicDto> execute() throws BusinessException {
+        Optional<MechanicRecord> result = new MechanicGatewayImpl()
+                .findById(id);
+        return MechanicAssembler.toDto(result);
+    }
+}
