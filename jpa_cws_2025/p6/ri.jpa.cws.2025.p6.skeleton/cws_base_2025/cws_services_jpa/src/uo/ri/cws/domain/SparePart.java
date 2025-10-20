@@ -1,0 +1,29 @@
+package uo.ri.cws.domain;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class SparePart {
+	// natural attributes
+	private String code;
+	private String description;
+	private double price;
+	private int stock;
+	private int minStock;
+	private int maxStock;
+
+	// accidental attributes
+	private Set<Substitution> substitutions = new HashSet<>();
+
+
+
+
+	public Set<Substitution> getSubstitutions() {
+		return new HashSet<>( substitutions );
+	}
+
+	Set<Substitution> _getSubstitutions() {
+		return substitutions;
+	}
+
+}

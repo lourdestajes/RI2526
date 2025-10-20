@@ -1,0 +1,144 @@
+package uo.ri.cws.domain;
+
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
+import uo.ri.util.assertion.ArgumentChecks;
+
+public class Contract {
+
+	public enum ContractState {
+		IN_FORCE, TERMINATED
+	}
+	private Mechanic mechanic;
+	private ContractType type;
+	private ProfessionalGroup professionalGroup;
+	
+	private LocalDate startDate;
+	private LocalDate endDate;
+	private double annualBaseSalary;
+	private double settlement;
+	private double taxRate;
+	private ContractState state = ContractState.IN_FORCE;
+	
+	// Atributos accidentales
+	private Set<Payroll> payrolls = new HashSet<>();
+	
+	public Contract(Mechanic mechanic, ContractType type, ProfessionalGroup category, LocalDate signingDate,
+			LocalDate endDate, double baseSalary) {
+		ArgumentChecks.isNotNull(mechanic, "Mechanic cannot be null");
+		ArgumentChecks.isNotNull(type, "Contract type cannot be null");
+		ArgumentChecks.isNotNull(category, "Professional group cannot be null");
+		ArgumentChecks.isNotNull(signingDate, "Signing date cannot be null");
+		ArgumentChecks.isTrue(baseSalary > 0, "Base salary must be positive");
+
+		if ("FIXED_TERM".equals(type.getName())) {
+			ArgumentChecks.isNotNull(endDate);
+			ArgumentChecks.isTrue(endDate.isAfter(signingDate), "End date must be after signing date");
+		}
+
+		this.startDate = signingDate.withDayOfMonth(1);
+		this.endDate = ("FIXED_TERM".equals(type.getName())) ? 
+				endDate.withDayOfMonth(endDate.lengthOfMonth()) 
+				: null;
+		this.annualBaseSalary = baseSalary;
+		this.taxRate = findTaxRate();
+		this.settlement = 0.0;
+		this.taxRate = findTaxRate();
+		Associations.Binds.link(mechanic, this);
+		Associations.Categorizes.link(category, this);
+		Associations.Defines.link(type, this);
+	}
+
+	public Contract(Mechanic m, ContractType t, ProfessionalGroup pg, LocalDate d, double salary) {
+		this(m, t, pg, d, null, salary);
+	}
+
+	public Double getAnnualBaseSalary() {
+		return this.annualBaseSalary;
+	}
+
+	public Mechanic getMechanic() {
+		return mechanic;
+	}
+
+	public ContractType getContractType() {
+		return type;
+	}
+
+	public ProfessionalGroup getProfessionalGroup() {
+		return professionalGroup;
+	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public double getSettlement() {
+		return settlement;
+	}
+
+	public double getTaxRate() {
+		return taxRate;
+	}
+
+	public boolean isInForce() {
+		return state == ContractState.IN_FORCE;
+	}
+	
+	public boolean isTerminated() {
+		return state == ContractState.TERMINATED;
+	}
+
+
+	public Set<Payroll> getPayrolls() {
+		return new HashSet<>(payrolls);
+	}
+
+	void _setMechanic(Mechanic mechanic) {
+		this.mechanic = mechanic;
+	}
+	
+	void _setProfessionalGroup(ProfessionalGroup group) {
+	    this.professionalGroup = group;	
+	}
+	
+	void _setContractType(ContractType t) {
+		this.type = t;
+	}
+	
+	Set<Payroll> _getPayrolls() {
+		return payrolls;
+	}
+	
+	private double findTaxRate() {
+		if (annualBaseSalary < 12450) {
+			return 0.19;
+		} else if (annualBaseSalary < 20200) {
+			return 0.24;
+		} else if (annualBaseSalary < 35200) {
+			return 0.30;
+		} else if (annualBaseSalary < 60000) {
+			return 0.37;
+		} else if (annualBaseSalary < 300000) {
+			return 0.45;
+		} else {
+			return 0.47;
+		}
+	}
+
+	public void terminate(LocalDate february2010) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+
+	
+
+}
