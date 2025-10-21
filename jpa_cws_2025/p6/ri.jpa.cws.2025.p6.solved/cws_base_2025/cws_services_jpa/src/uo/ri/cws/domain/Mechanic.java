@@ -2,6 +2,7 @@ package uo.ri.cws.domain;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import uo.ri.util.assertion.ArgumentChecks;
@@ -87,8 +88,8 @@ public class Mechanic {
 		return "Mechanic [nif=" + nif + ", surname=" + surname + ", name=" + name + "]";
 	}
 
-	
-	
-	
-
+	public Optional<Contract> getContractInForce() {
+		Optional<Contract> optional = contracts.stream().filter(c -> c.isInForce()).findFirst();
+		return optional;
+	}
 }

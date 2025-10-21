@@ -1,7 +1,9 @@
 package uo.ri.cws.domain;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import uo.ri.util.assertion.ArgumentChecks;
@@ -27,6 +29,30 @@ public class Contract {
 	
 	public Contract(Mechanic mechanic, ContractType type, ProfessionalGroup category, LocalDate signingDate,
 			LocalDate endDate, double baseSalary) {
+		validateArguments(mechanic, type, category, signingDate, endDate, baseSalary);
+		fillEntity(signingDate, endDate, baseSalary, type);
+		terminatePreviousContract(mechanic);
+		Associations.Binds.link(mechanic, this);
+		Associations.Categorizes.link(category, this);
+		Associations.Defines.link(type, this);
+	}
+
+	private void terminatePreviousContract(Mechanic mechanic) {
+		mechanic.getContractInForce().ifPresent(c -> c.terminate(LocalDate.now()));
+	}
+
+	private void fillEntity(LocalDate signingDate, LocalDate endDate, double baseSalary, ContractType type) {
+		this.startDate = signingDate.withDayOfMonth(1);
+		this.endDate = ("FIXED_TERM".equals(type.getName())) ? 
+				endDate.withDayOfMonth(endDate.lengthOfMonth()) 
+				: null;
+		this.annualBaseSalary = baseSalary;
+		this.taxRate = findTaxRate();
+		this.settlement = 0.0;
+	}
+
+	private void validateArguments(Mechanic mechanic, ContractType type, ProfessionalGroup category,
+			LocalDate signingDate, LocalDate endDate, double baseSalary) {
 		ArgumentChecks.isNotNull(mechanic, "Mechanic cannot be null");
 		ArgumentChecks.isNotNull(type, "Contract type cannot be null");
 		ArgumentChecks.isNotNull(category, "Professional group cannot be null");
@@ -37,18 +63,6 @@ public class Contract {
 			ArgumentChecks.isNotNull(endDate);
 			ArgumentChecks.isTrue(endDate.isAfter(signingDate), "End date must be after signing date");
 		}
-
-		this.startDate = signingDate.withDayOfMonth(1);
-		this.endDate = ("FIXED_TERM".equals(type.getName())) ? 
-				endDate.withDayOfMonth(endDate.lengthOfMonth()) 
-				: null;
-		this.annualBaseSalary = baseSalary;
-		this.taxRate = findTaxRate();
-		this.settlement = 0.0;
-		this.taxRate = findTaxRate();
-		Associations.Binds.link(mechanic, this);
-		Associations.Categorizes.link(category, this);
-		Associations.Defines.link(type, this);
 	}
 
 	public Contract(Mechanic m, ContractType t, ProfessionalGroup pg, LocalDate d, double salary) {
@@ -132,13 +146,47 @@ public class Contract {
 		}
 	}
 
-	public void terminate(LocalDate february2010) {
-		// TODO Auto-generated method stub
-		
+	public void terminate(LocalDate endDate) {
+		ArgumentChecks.isNotNull(endDate, "End date cannot be null");
+		checkIsNotFinished();
+		checkEndDate(endDate);
+		this.endDate = endDate.withDayOfMonth(endDate.lengthOfMonth());
+		this.settlement = calculateSettlement();
+		this.state = ContractState.TERMINATED;
 	}
 
-	
+	private double calculateSettlement() {
+		int fullYearsInService = calculateFullYearsInService();
+		if (fullYearsInService < 1) {
+            return 0.0;
+        }
+		double avgDailySalary = calculateAverageDailySalary();
+		double compensationDays = type.getCompensationDaysPerYear();
+		return fullYearsInService * compensationDays * avgDailySalary;
+	}
 
+	private double calculateAverageDailySalary() {
+		List<Payroll> last12Payrolls = payrolls.stream().sorted((p1, p2) -> p2.getDate().compareTo(p1.getDate()))
+				.limit(12).toList();
+		
+		return last12Payrolls.stream().mapToDouble(Payroll::getGrossSalary).sum() / 365;
+	}
+
+	private int calculateFullYearsInService() {
+		return (int) (ChronoUnit.DAYS.between(startDate, endDate.plusDays(1)) / 365);
+	}
+
+	private void checkEndDate(LocalDate endDate) {
+		if (endDate.isBefore(startDate)) {
+			throw new IllegalArgumentException("End date cannot be before start date");
+		}		
+	}
+
+	private void checkIsNotFinished() {
+		if (isTerminated()) {
+			throw new IllegalStateException("Contract is already terminated");
+		}
+	}
 	
 
 }
