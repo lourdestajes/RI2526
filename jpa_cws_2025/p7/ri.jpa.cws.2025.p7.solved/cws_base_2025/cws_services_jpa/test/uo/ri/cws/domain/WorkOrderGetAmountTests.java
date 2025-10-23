@@ -179,9 +179,18 @@ class WorkOrderGetAmountTests {
 	 * @param workOrder
 	 */
 	private void addIntervention(Mechanic mechanic, WorkOrder workOrder) {
+		delay(100); // to ensure different timestamps
 		Intervention i = new Intervention(mechanic, workOrder, SIXTY_MINS);
 		SparePart sp = new SparePart("R1001", "junta la trocla", EUR_100);
 		new Substitution(sp, i, NUM_OF_SPARES);
 	}
 
+	private void delay(int ms) {
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			// do nothing
+		}
+	}
+	
 }

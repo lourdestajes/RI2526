@@ -2,17 +2,30 @@ package uo.ri.cws.domain;
 
 import java.util.Objects;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Substitution {
+@Entity
+@Table(name="TSUBSTITUTIONS",
+		uniqueConstraints = {
+				@UniqueConstraint(columnNames = {"spaprePart_id", "intervention_id"})
+		}
+)
+public class Substitution extends BaseEntity {
 	// natural attributes
 	private int quantity;
 
 	// accidental attributes
-	private SparePart sparePart;
-	private Intervention intervention;
+	@ManyToOne private SparePart sparePart;
+	@ManyToOne private Intervention intervention;
 
-
+	Substitution() {
+		// for JPA
+	}
 
 	public Substitution(SparePart spare, Intervention intervention, int units) {
 		ArgumentChecks.isNotNull(spare, "The spare part cannot be null");

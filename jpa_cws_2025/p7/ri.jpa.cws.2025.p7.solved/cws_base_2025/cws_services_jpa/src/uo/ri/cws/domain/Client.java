@@ -1,17 +1,19 @@
 package uo.ri.cws.domain;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity(name = "TCLIENTS")
 public class Client extends BaseEntity {
-//	@Column(unique = true)
+	@Column(unique = true)
 	private String nif; 
 	private String name;
 	private String surname;
@@ -21,7 +23,9 @@ public class Client extends BaseEntity {
 	private Address address;
 
 	// Atributos accidentales
+	@OneToMany(mappedBy = "client")
 	private Set<Vehicle> vehicles = new HashSet<>();
+	@Transient
 	private Set<PaymentMean> paymentMeans = new HashSet<>();
 	
 	Client() {
@@ -83,32 +87,6 @@ public class Client extends BaseEntity {
 		return new HashSet<>(paymentMeans);
 	}
 
-	@Override
-	public String toString() {
-		return "Client [nif=" + nif + ", name=" + name + ", surname=" + surname + ", email=" + email + ", phone="
-				+ phone + ", address=" + address + "]";
-	}
-
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(nif);
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Client other = (Client) obj;
-		return Objects.equals(nif, other.nif);
-	}
-
-
 	Set<Vehicle> _getVehicles() {
 		return vehicles;
 	}
@@ -117,5 +95,12 @@ public class Client extends BaseEntity {
 		return paymentMeans;
 	}
     
+	@Override
+	public String toString() {
+		return "Client [nif=" + nif + ", name=" + name + ", surname=" + surname + ", email=" + email + ", phone="
+				+ phone + ", address=" + address + "]";
+	}
+
+
 }
 

@@ -88,6 +88,7 @@ public class Mechanic {
 		return "Mechanic [nif=" + nif + ", surname=" + surname + ", name=" + name + "]";
 	}
 
+
 	public Optional<Contract> getContractInForce() {
 		Optional<Contract> optional = contracts.stream().filter(c -> c.isInForce()).findFirst();
 		return optional;

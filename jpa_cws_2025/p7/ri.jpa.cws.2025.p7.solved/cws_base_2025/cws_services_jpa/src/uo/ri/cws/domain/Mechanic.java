@@ -1,22 +1,37 @@
 package uo.ri.cws.domain;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Mechanic {
+@Entity
+@Table(name = "TMechanics")
+public class Mechanic extends BaseEntity {
 	// natural attributes
+	@Column(unique = true)
 	private String nif;
 	private String surname;
 	private String name;
 
 	// accidental attributes
+	@OneToMany(mappedBy="mechanic")
 	private Set<WorkOrder> assigned = new HashSet<>();
+	@Transient 
 	private Set<Intervention> interventions = new HashSet<>();
+	@Transient
 	private Set<Contract> contracts = new HashSet<>();
+	
+	Mechanic() {
+		// for JPA
+	}
 	
 	public Mechanic(String nif, String surname, String name) {
 		// check arguments (always), through IllegalArgumentException
@@ -64,23 +79,6 @@ public class Mechanic {
 
 	Set<Contract> _getContracts() {
 		return contracts;
-	}
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(nif);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Mechanic other = (Mechanic) obj;
-		return Objects.equals(nif, other.nif);
 	}
 
 	@Override

@@ -1,21 +1,33 @@
 package uo.ri.cws.domain;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Vehicle {
+@Entity
+@Table(name = "TVehicles")
+public class Vehicle extends BaseEntity {
+	@Column(unique=true)
 	private String plateNumber;
 	private String make;
 	private String model;
 	
 	// Atributos accidentales
-	private Client client;
-	private VehicleType vehicleType;
-	private Set<WorkOrder> workOrders = new HashSet<>();
+	@ManyToOne private Client client;
+	@ManyToOne private VehicleType vehicleType;
+	@OneToMany(mappedBy="vehicle") private Set<WorkOrder> workOrders = new HashSet<>();
 
+	Vehicle() {
+		// for JPA
+	}
+	
 	public Vehicle(String plateNumber, String make, String model) {
 		ArgumentChecks.isNotBlank( plateNumber, "Plate number cannot be null" );
 		ArgumentChecks.isNotBlank( make, "Make cannot be null" );
@@ -38,30 +50,8 @@ public class Vehicle {
 		return model;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(plateNumber);
-	}
-
 	public Client getClient() {
 		return client;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Vehicle other = (Vehicle) obj;
-		return Objects.equals(plateNumber, other.plateNumber);
-	}
-
-	@Override
-	public String toString() {
-		return "Vehicle [plateNumber=" + plateNumber + ", make=" + make + ", model=" + model + "]";
 	}
 
 	void _setClient(Client client) {
@@ -84,4 +74,8 @@ public class Vehicle {
 		return new HashSet<>(workOrders);
 	}
 	
+	@Override
+	public String toString() {
+		return "Vehicle [plateNumber=" + plateNumber + ", make=" + make + ", model=" + model + "]";
+	}
 }

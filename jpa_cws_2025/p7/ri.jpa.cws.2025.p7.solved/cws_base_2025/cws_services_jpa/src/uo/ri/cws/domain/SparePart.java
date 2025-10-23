@@ -1,13 +1,20 @@
 package uo.ri.cws.domain;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class SparePart {
+@Entity
+@Table(name = "TSpareParts")
+public class SparePart extends BaseEntity {
 	// natural attributes
+	@Column(unique = true)
 	private String code;
 	private String description;
 	private double price;
@@ -16,8 +23,13 @@ public class SparePart {
 	private int maxStock;
 
 	// accidental attributes
+	@OneToMany(mappedBy="sparePart")
 	private Set<Substitution> substitutions = new HashSet<>();
 
+	SparePart() {
+		// for JPA
+	}
+	
 	public SparePart(String code, String description, double price, int stock, int minStock, int maxStock) {
 		ArgumentChecks.isNotBlank(code, "Code cannot be null or blank");
 		ArgumentChecks.isNotBlank(description, "Description cannot be null or blank");
@@ -80,22 +92,4 @@ public class SparePart {
 				+ ", minStock=" + minStock + ", maxStock=" + maxStock + "]";
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(code);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SparePart other = (SparePart) obj;
-		return Objects.equals(code, other.code);
-	}
-
-	
 }

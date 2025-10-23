@@ -3,16 +3,24 @@ package uo.ri.cws.domain;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
-public class Invoice {
+@Entity
+@Table(name = "TInvoices")
+public class Invoice extends BaseEntity {
 	public enum InvoiceState { NOT_YET_PAID, PAID }
 
 	// natural attributes
+	@Column(unique = true)
 	private Long number;
 	private LocalDate date;
 	private double amount;
@@ -20,9 +28,15 @@ public class Invoice {
 	private InvoiceState state = InvoiceState.NOT_YET_PAID;
 
 	// accidental attributes
+	@OneToMany(mappedBy="invoice")
 	private Set<WorkOrder> workOrders = new HashSet<>();
+	@Transient 
 	private Set<Charge> charges = new HashSet<>();
 
+	Invoice() {
+		// for JPA
+	}
+	
 	public Invoice(Long number) {
 		// call full constructor with sensible defaults
 		this(number, LocalDate.now(), List.of());
@@ -121,23 +135,6 @@ public class Invoice {
 	public String toString() {
 		return "Invoice [number=" + number + ", date=" + date + ", amount=" + amount + ", vat=" + vat + ", state="
 				+ state + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(number);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Invoice other = (Invoice) obj;
-		return Objects.equals(number, other.number);
 	}
 
 	public Long getNumber() {

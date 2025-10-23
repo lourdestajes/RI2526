@@ -3,13 +3,23 @@ package uo.ri.cws.domain;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
-public class WorkOrder {
+@Entity
+@Table(name = "TWORKORDERS", uniqueConstraints = {
+		@UniqueConstraint(columnNames= {"date", "vehicle_id"})
+})
+
+public class WorkOrder extends BaseEntity {
 	public enum WorkOrderState {
 		OPEN,
 		ASSIGNED,
@@ -24,11 +34,15 @@ public class WorkOrder {
 	private WorkOrderState state = WorkOrderState.OPEN;
 
 	// accidental attributes
-	private Vehicle vehicle;
-	private Mechanic mechanic;
-	private Invoice invoice;
-	private Set<Intervention> interventions = new HashSet<>();
+	@ManyToOne private Vehicle vehicle;
+	@ManyToOne private Mechanic mechanic;
+	@ManyToOne private Invoice invoice;
+	@Transient private Set<Intervention> interventions = new HashSet<>();
 
+	WorkOrder() {
+		// for JPA
+	}
+	
 	public WorkOrder(Vehicle vehicle, String description) {
 		this(vehicle, LocalDateTime.now(), description);
 	}
@@ -193,23 +207,6 @@ public class WorkOrder {
 	public String toString() {
 		return "WorkOrder [date=" + date + ", description=" + description + ", amount=" + amount + ", state=" + state
 				+ ", vehicle=" + vehicle + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(date, vehicle);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		WorkOrder other = (WorkOrder) obj;
-		return Objects.equals(date, other.date) && Objects.equals(vehicle, other.vehicle);
 	}
 
 	public boolean isFinished() {
