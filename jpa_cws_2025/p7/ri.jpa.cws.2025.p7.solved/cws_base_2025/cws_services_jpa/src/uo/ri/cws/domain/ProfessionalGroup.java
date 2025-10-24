@@ -1,20 +1,30 @@
 package uo.ri.cws.domain;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class ProfessionalGroup {
+@Entity
+@Table(name="TPROFESSIONALGROUPS")
+public class ProfessionalGroup extends BaseEntity {
 
-	private String name;
+	@Column(unique=true) private String name;
 	private double trienniumSalary;
 	private double productivityPlus;
 	
 	// Atributos accidentales
-	private Set<Contract> contracts = new HashSet<>();
+	@OneToMany(mappedBy="professionalGroup") private Set<Contract> contracts = new HashSet<>();
 
+	ProfessionalGroup() {
+		// for JPA
+	}
+	
 	public ProfessionalGroup(String name, double trienniumSalary, double productivityPlus) {
 		ArgumentChecks.isNotBlank( name, "Name cannot be null or empty" );
 		ArgumentChecks.isTrue( trienniumSalary >= 0, "triennium Salary must be non-negative" );
@@ -42,23 +52,6 @@ public class ProfessionalGroup {
 
 	Set<Contract> _getContracts() {
 		return contracts;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(name);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ProfessionalGroup other = (ProfessionalGroup) obj;
-		return Objects.equals(name, other.name);
 	}
 
 	@Override

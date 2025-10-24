@@ -49,6 +49,28 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.5.0</version>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.4.0</version>
+				<executions>
+					<execution>
+						<id>add-test-source</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>test</source>
+								<source>test_extended</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+						
 		</plugins>
 		
 		<pluginManagement>
@@ -56,7 +78,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.6.0</version>
+                    <version>3.5.1</version>
                 </plugin>
 			</plugins>
 		</pluginManagement>

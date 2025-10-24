@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
@@ -28,10 +27,8 @@ public class Invoice extends BaseEntity {
 	private InvoiceState state = InvoiceState.NOT_YET_PAID;
 
 	// accidental attributes
-	@OneToMany(mappedBy="invoice")
-	private Set<WorkOrder> workOrders = new HashSet<>();
-	@Transient 
-	private Set<Charge> charges = new HashSet<>();
+	@OneToMany(mappedBy="invoice") private Set<WorkOrder> workOrders = new HashSet<>();
+	@OneToMany(mappedBy="invoice") private Set<Charge> charges = new HashSet<>();
 
 	Invoice() {
 		// for JPA

@@ -1,16 +1,24 @@
 package uo.ri.cws.domain;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
+@Entity
+@Table(name="TCREDITCARDS")
 public class CreditCard extends PaymentMean {
-	private String number;
+	
+	@Column(unique=true) private String number;
 	private String type;
 	private LocalDate validThru;
 	
+	CreditCard() {
+		// for JPA
+	}
 	
 	public CreditCard(String num, String type, LocalDate date) {
 		ArgumentChecks.isNotBlank(num, "The number cannot be null");
@@ -36,29 +44,6 @@ public class CreditCard extends PaymentMean {
 		return validThru;
 	}
 
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(number);
-		return result;
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CreditCard other = (CreditCard) obj;
-		return Objects.equals(number, other.number);
-	}
-
-
 	@Override
 	public String toString() {
 		return "CreditCard [number=" + number + ", type=" + type + ", validThru=" + validThru + "]";
@@ -67,7 +52,7 @@ public class CreditCard extends PaymentMean {
 
 	@Override
 	public void pay(double amount) {
-		ArgumentChecks.isTrue(amount > 0, "The amount must be positive");
+		ArgumentChecks.isTrue(amount >= 0, "The amount must be positive");
 		StateChecks.isTrue( canPay(amount), "The credit card is outdated");
 		super.pay(amount);
 	}
@@ -77,7 +62,7 @@ public class CreditCard extends PaymentMean {
 	@Override
 	public boolean canPay(Double amount) {
 		ArgumentChecks.isNotNull(amount, "The amount cannot be null");
-		ArgumentChecks.isTrue(amount > 0, "The amount must be positive");
+		ArgumentChecks.isTrue(amount >= 0, "The amount must be positive");
 		return validThru.isAfter( LocalDate.now() );
 	}
 

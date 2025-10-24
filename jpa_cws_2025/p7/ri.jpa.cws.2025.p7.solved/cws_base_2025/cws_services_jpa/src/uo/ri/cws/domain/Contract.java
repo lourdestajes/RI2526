@@ -6,16 +6,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Contract {
+@Entity
+@Table(name="TCONTRACTS",
+	uniqueConstraints= {
+			@UniqueConstraint(columnNames= {"mechanic_id", "startdate"})
+	}
+)
+public class Contract extends BaseEntity {
 
 	public enum ContractState {
 		IN_FORCE, TERMINATED
 	}
-	private Mechanic mechanic;
-	private ContractType type;
-	private ProfessionalGroup professionalGroup;
+	@ManyToOne private Mechanic mechanic;
 	
 	private LocalDate startDate;
 	private LocalDate endDate;
@@ -25,7 +35,13 @@ public class Contract {
 	private ContractState state = ContractState.IN_FORCE;
 	
 	// Atributos accidentales
-	private Set<Payroll> payrolls = new HashSet<>();
+	@OneToMany(mappedBy="contract") private Set<Payroll> payrolls = new HashSet<>();
+	@ManyToOne private ContractType contractType;
+	@ManyToOne private ProfessionalGroup professionalGroup;
+	
+	Contract() {
+		// for JPA
+	}
 	
 	public Contract(Mechanic mechanic, ContractType type, ProfessionalGroup category, LocalDate signingDate,
 			LocalDate endDate, double baseSalary) {
@@ -78,7 +94,7 @@ public class Contract {
 	}
 
 	public ContractType getContractType() {
-		return type;
+		return contractType;
 	}
 
 	public ProfessionalGroup getProfessionalGroup() {
@@ -123,13 +139,22 @@ public class Contract {
 	}
 	
 	void _setContractType(ContractType t) {
-		this.type = t;
+		this.contractType = t;
 	}
 	
 	Set<Payroll> _getPayrolls() {
 		return payrolls;
 	}
 	
+	
+	@Override
+	public String toString() {
+		return "Contract [mechanic=" + mechanic + ", startDate=" + startDate + ", endDate=" + endDate
+				+ ", annualBaseSalary=" + annualBaseSalary + ", settlement=" + settlement + ", taxRate=" + taxRate
+				+ ", state=" + state + ", payrolls=" + payrolls + ", type=" + contractType + ", professionalGroup="
+				+ professionalGroup + "]";
+	}
+
 	private double findTaxRate() {
 		if (annualBaseSalary < 12450) {
 			return 0.19;
@@ -161,7 +186,7 @@ public class Contract {
             return 0.0;
         }
 		double avgDailySalary = calculateAverageDailySalary();
-		double compensationDays = type.getCompensationDaysPerYear();
+		double compensationDays = contractType.getCompensationDaysPerYear();
 		return fullYearsInService * compensationDays * avgDailySalary;
 	}
 

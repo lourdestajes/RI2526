@@ -1,19 +1,29 @@
 package uo.ri.cws.domain;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class ContractType {
+@Entity
+@Table(name="TCONTRACTTYPES")
+public class ContractType extends BaseEntity {
 	
 	// Atributos naturales
-	private String name;
+	@Column(unique=true) private String name;
 	private double compensationDaysPerYear;
 	
 	// Atributos accidentales
-	private Set<Contract> contracts = new HashSet<>();
+	@OneToMany(mappedBy="contractType") private Set<Contract> contracts = new HashSet<>();
+	
+	ContractType() {
+		// for JPA
+	}
 	
 	public ContractType(String name, double days) {
 		ArgumentChecks.isNotBlank( name, "Name cannot be null or empty" );
@@ -40,25 +50,6 @@ public class ContractType {
 	Set<Contract> _getContracts() {
 		return contracts;
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(name);
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ContractType other = (ContractType) obj;
-		return Objects.equals(name, other.name);
-	}
-
 
 	@Override
 	public String toString() {

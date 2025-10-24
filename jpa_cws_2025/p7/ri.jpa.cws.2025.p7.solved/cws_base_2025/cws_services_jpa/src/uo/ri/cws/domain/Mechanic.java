@@ -8,7 +8,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
@@ -24,16 +23,16 @@ public class Mechanic extends BaseEntity {
 	// accidental attributes
 	@OneToMany(mappedBy="mechanic")
 	private Set<WorkOrder> assigned = new HashSet<>();
-	@Transient 
+	@OneToMany(mappedBy="mechanic") 
 	private Set<Intervention> interventions = new HashSet<>();
-	@Transient
+	@OneToMany(mappedBy="mechanic")
 	private Set<Contract> contracts = new HashSet<>();
 	
 	Mechanic() {
 		// for JPA
 	}
 	
-	public Mechanic(String nif, String surname, String name) {
+	public Mechanic(String nif, String name, String surname) {
 		// check arguments (always), through IllegalArgumentException
 		ArgumentChecks.isNotBlank( nif, "NIF cannot be null or empty" );
 		ArgumentChecks.isNotBlank( surname, "Surname cannot be null or empty" );
@@ -45,6 +44,10 @@ public class Mechanic extends BaseEntity {
 		this.name = name;
 	}
 	
+	public Mechanic(String nif) {
+		this(nif, "no-name", "no-surname");
+	}
+
 	public String getNif() {
 		return nif;
 	}

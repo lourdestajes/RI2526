@@ -7,14 +7,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Transient;
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
 @Entity(name = "TCLIENTS")
 public class Client extends BaseEntity {
-	@Column(unique = true)
-	private String nif; 
+	@Column(unique = true) private String nif; 
 	private String name;
 	private String surname;
 	private String email;
@@ -25,7 +23,7 @@ public class Client extends BaseEntity {
 	// Atributos accidentales
 	@OneToMany(mappedBy = "client")
 	private Set<Vehicle> vehicles = new HashSet<>();
-	@Transient
+	@OneToMany(mappedBy = "client")
 	private Set<PaymentMean> paymentMeans = new HashSet<>();
 	
 	Client() {
@@ -38,7 +36,7 @@ public class Client extends BaseEntity {
 		ArgumentChecks.isNotBlank(surname, "Surname cannot be blank");
 		ArgumentChecks.isNotBlank(email, "Email cannot be blank");
 		ArgumentChecks.isNotBlank(phone, "Phone cannot be blank");
-		ArgumentChecks.isNotNull(address, "Address cannot be null");
+//		ArgumentChecks.isNotNull(address, "Address cannot be null");
 		
 		this.nif = nif;
 		this.name = name;
@@ -53,6 +51,10 @@ public class Client extends BaseEntity {
 		this(nif, name, surname, "no@email", "no-phone", new Address("no-street", "no-city", "no-zip"));
 	}
 
+
+	public Client(String nif) {
+		this(nif, "no-name", "no-surname", "no@email", "no-phone", null);
+	}
 
 	public String getNif() {
 		return nif;
@@ -99,6 +101,11 @@ public class Client extends BaseEntity {
 	public String toString() {
 		return "Client [nif=" + nif + ", name=" + name + ", surname=" + surname + ", email=" + email + ", phone="
 				+ phone + ", address=" + address + "]";
+	}
+
+	public void setAddress(Address a) {
+		ArgumentChecks.isNotNull(a, "Invalid null address");
+		this.address = a;
 	}
 
 

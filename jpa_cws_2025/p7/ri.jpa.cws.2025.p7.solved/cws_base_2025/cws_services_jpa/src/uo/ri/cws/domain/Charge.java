@@ -1,22 +1,35 @@
 package uo.ri.cws.domain;
 
-import java.util.Objects;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
-public class Charge {
+@Entity
+@Table(name="TCHARGES",
+	uniqueConstraints= {
+			@UniqueConstraint(columnNames= {"invoice_id", "paymentmean_id"})
+	}
+)
+public class Charge extends BaseEntity {
 	// natural attributes
 	private double amount = 0.0;
 
 	// accidental attributes
-	private Invoice invoice;
-	private PaymentMean paymentMean;
+	@ManyToOne private Invoice invoice;
+	@ManyToOne private PaymentMean paymentMean;
 
+	Charge() {
+		// for JPA
+	}
+	
 	public Charge(Invoice invoice, PaymentMean paymentMean, double amount) {
 		ArgumentChecks.isNotNull(invoice, "The invoice cannot be null");
 		ArgumentChecks.isNotNull(paymentMean, "The payment mean cannot be null");
-		ArgumentChecks.isTrue(amount > 0.0, "The amount must be positive");
+		ArgumentChecks.isTrue(amount >= 0.0, "The amount must be positive");
 		
 		// store the amount
 		this.amount = amount;
@@ -26,39 +39,6 @@ public class Charge {
 		Associations.Settles.link( invoice, this, paymentMean );
 	}
 	
-
-	
-
-	@Override
-	public String toString() {
-		return "Charge [amount=" + amount + ", invoice=" + invoice + ", paymentMean=" + paymentMean + "]";
-	}
-
-
-
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(invoice, paymentMean);
-	}
-
-
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Charge other = (Charge) obj;
-		return Objects.equals(invoice, other.invoice) && Objects.equals(paymentMean, other.paymentMean);
-	}
-
-
-
 
 	public double getAmount() {
 		return amount;
@@ -98,6 +78,11 @@ public class Charge {
 		paymentMean.pay( -amount );
 		// unlinks invoice, this and paymentMean
 		Associations.Settles.unlink(this);
+	}
+
+	@Override
+	public String toString() {
+		return "Charge [amount=" + amount + ", invoice=" + invoice + ", paymentMean=" + paymentMean + "]";
 	}
 
 }

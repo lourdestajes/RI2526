@@ -7,8 +7,8 @@ import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
@@ -18,7 +18,6 @@ import uo.ri.util.assertion.StateChecks;
 @Table(name = "TWORKORDERS", uniqueConstraints = {
 		@UniqueConstraint(columnNames= {"date", "vehicle_id"})
 })
-
 public class WorkOrder extends BaseEntity {
 	public enum WorkOrderState {
 		OPEN,
@@ -37,7 +36,7 @@ public class WorkOrder extends BaseEntity {
 	@ManyToOne private Vehicle vehicle;
 	@ManyToOne private Mechanic mechanic;
 	@ManyToOne private Invoice invoice;
-	@Transient private Set<Intervention> interventions = new HashSet<>();
+	@OneToMany(mappedBy="workOrder") private Set<Intervention> interventions = new HashSet<>();
 
 	WorkOrder() {
 		// for JPA

@@ -1,19 +1,34 @@
 package uo.ri.cws.domain;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
-public abstract class PaymentMean {
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import uo.ri.cws.domain.base.BaseEntity;
+
+@Entity
+@Table(name="TPAYMENTMEANS")
+@Inheritance(strategy=InheritanceType.JOINED)
+public abstract class PaymentMean extends BaseEntity {
+	
 	// natural attributes
 	private double accumulated = 0.0;
 
 	// accidental attributes
-	private Client client;
-	private Set<Charge> charges = new HashSet<>();
+	@ManyToOne private Client client;
+	@OneToMany(mappedBy="paymentMean") private Set<Charge> charges = new HashSet<>();
 
 	public abstract boolean canPay(Double amount);
 
+	PaymentMean() {
+		// for JPA
+	}
+	
 	public void pay(double importe) {
 		this.accumulated += importe;
 	}
@@ -36,23 +51,6 @@ public abstract class PaymentMean {
 
 	public Client getClient() {
 		return client;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(client);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PaymentMean other = (PaymentMean) obj;
-		return Objects.equals(client, other.client);
 	}
 
 }

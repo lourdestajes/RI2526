@@ -4,11 +4,21 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
-import java.util.Objects;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Payroll {
+@Entity
+@Table(name="TPAYROLLS",
+	uniqueConstraints= {
+			@UniqueConstraint(columnNames= {"contract_id", "date"})
+	}
+)
+public class Payroll extends BaseEntity {
 
 	private static final double NIC_RATE = 0.05;
 	// Atributos naturales
@@ -21,8 +31,12 @@ public class Payroll {
 	private double nicDeduction;
 	
 	// Atributos accidentales
-	private Contract contract;
+	@ManyToOne private Contract contract;
 	
+	Payroll() {
+		// for JPA
+	}
+			
 	public Payroll(Contract c, LocalDate payrollDate) {
 		ArgumentChecks.isNotNull(c, "Contract cannot be null");
 		ArgumentChecks.isNotNull(payrollDate, "Payroll date cannot be null");
@@ -113,23 +127,6 @@ public class Payroll {
 
 	public double getGrossSalary() {
 		return baseSalary + trienniumEarning + productivityEarning + extraSalary;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(contract, date);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Payroll other = (Payroll) obj;
-		return Objects.equals(contract, other.contract) && Objects.equals(date, other.date);
 	}
 
 	@Override

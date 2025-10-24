@@ -12,7 +12,7 @@ import uo.ri.util.assertion.ArgumentChecks;
 @Entity
 @Table(name="TSUBSTITUTIONS",
 		uniqueConstraints = {
-				@UniqueConstraint(columnNames = {"spaprePart_id", "intervention_id"})
+				@UniqueConstraint(columnNames = {"sparePart_id", "intervention_id"})
 		}
 )
 public class Substitution extends BaseEntity {

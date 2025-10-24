@@ -38,6 +38,10 @@ public class Vehicle extends BaseEntity {
 		this.model = model;
 	}
 
+	public Vehicle(String plateNumber) {
+		this(plateNumber, "no-make", "no-model");
+	}
+
 	public String getPlateNumber() {
 		return plateNumber;
 	}

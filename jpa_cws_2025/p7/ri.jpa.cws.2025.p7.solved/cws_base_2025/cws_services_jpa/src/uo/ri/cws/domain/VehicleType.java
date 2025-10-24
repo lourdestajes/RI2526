@@ -33,7 +33,7 @@ public class VehicleType extends BaseEntity {
 
 	public VehicleType(String name, double price) {
 		ArgumentChecks.isNotBlank( name, "The vehicle type name cannot be null" );
-        ArgumentChecks.isTrue( price > 0, "The price per hour cannot be negative" );
+        ArgumentChecks.isTrue( price >= 0, "The price per hour cannot be negative" );
         this.name = name;
         this.pricePerHour = price;
 	}
