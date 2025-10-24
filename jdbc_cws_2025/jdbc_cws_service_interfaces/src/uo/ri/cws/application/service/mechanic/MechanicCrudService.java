@@ -11,6 +11,37 @@ import uo.ri.util.exception.BusinessException;
  */
 public interface MechanicCrudService {
 
+    /**
+     * PROOF OF AUTHORSHIP 27/10/2025 model 1
+     * 
+     * Calculate the amount of time a mechanic, specified by the id field, has
+     * spent on interventions.
+     * 
+     * @param mechanicId
+     * @return integer that represents the minutes a mechanic has spent on
+     *         interventions.
+     * @throws IllegalArgumentException when argument is null or dni is null or
+     *                                  empty string BusinessException if the
+     *                                  mechanic does not exist.
+     */
+    int calculateTimeOnInterventions(String mechanicId)
+        throws BusinessException;
+
+    /**
+     * PROOF OF AUTHORSHIP 27/10/2025 model 2
+     *
+     * List of the mechanics that have a base salary greater than the amount
+     * specified by the field.
+     *
+     * @param amount
+     * @return List of the mechanics that have a base salary greater than the
+     *         amount field.
+     * @throws IllegalArgumentException if the amount is negative.
+     */
+    List<MechanicDto> findBaseWageGreaterThan(double amount)
+            throws BusinessException;
+
+    
 	/**
 	 * Add a new mechanic to the system with the data specified in the dto.
 	 * 		The id value will be ignored

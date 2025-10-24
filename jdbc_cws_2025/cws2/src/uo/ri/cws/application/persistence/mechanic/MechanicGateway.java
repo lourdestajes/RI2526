@@ -1,5 +1,6 @@
 package uo.ri.cws.application.persistence.mechanic;
 
+import java.util.List;
 import java.util.Optional;
 
 import uo.ri.cws.application.persistence.Gateway;
@@ -22,4 +23,6 @@ public interface MechanicGateway extends Gateway<MechanicRecord> {
 		public String surname;
 
 	}
+
+	List<MechanicRecord> findBySalaryGreater(double wage);
 }

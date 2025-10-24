@@ -28,7 +28,9 @@ public class ScenarioMFbI1 {
     @When("[M.FbI.1] I look for mechanic")
     public void whenILookForMechanic() throws BusinessException {
         result = service.findById(mechanic.id);
+//        result = service.findById("009aed97-4639-4f0a-b818-d21000f830f2");
     }
+    
 
     @Then("[M.FbI.1] I get mechanic")
     public void thenIGetMechanic() {

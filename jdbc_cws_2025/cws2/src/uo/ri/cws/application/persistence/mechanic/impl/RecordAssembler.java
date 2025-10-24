@@ -2,9 +2,12 @@ package uo.ri.cws.application.persistence.mechanic.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 import uo.ri.cws.application.persistence.base.BaseRecordAssembler;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway.MechanicRecord;
+import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
 
 public class RecordAssembler extends BaseRecordAssembler<MechanicRecord> {
 
@@ -21,4 +24,12 @@ public class RecordAssembler extends BaseRecordAssembler<MechanicRecord> {
         return result;
     }
 
+
+	public Optional<MechanicRecord> toOptionalRecord(ResultSet rs) throws SQLException {
+		Optional<MechanicRecord> o = Optional.empty();
+		if (rs.next()) {
+			o = Optional.of(toRecord(rs));
+		}
+		return o;
+	}
 }
