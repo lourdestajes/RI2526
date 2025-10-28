@@ -43,4 +43,9 @@ public class DtoAssembler {
 		return dto;
 	}
 
+	public static List<InvoiceDto> toDtoList(List<InvoiceRecord> invoices) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import uo.ri.conf.Factories;
 import uo.ri.cws.application.persistence.util.command.CommandExecutor;
 import uo.ri.cws.application.service.invoice.InvoicingService;
 import uo.ri.cws.application.service.invoice.create.commands.CreateInvoiceFor;
+import uo.ri.cws.application.service.invoice.create.commands.FindInvoicesByVehiclePlate;
 import uo.ri.cws.application.service.invoice.create.commands.FindNotInvoicedWorkOrdersByClientNif;
 import uo.ri.util.exception.BusinessException;
 import uo.ri.util.exception.NotYetImplementedException;
@@ -58,6 +58,12 @@ public class InvoicingServiceImpl implements InvoicingService {
 	public void settleInvoice(String invoiceId, Map<String, Double> charges)
 			throws BusinessException {
 		throw new NotYetImplementedException();
+	}
+
+
+	@Override
+	public List<InvoiceDto> findInvoicesByVehicle(String plate) throws BusinessException {
+		return executor.execute(new FindInvoicesByVehiclePlate(plate));
 	}
 	
 	

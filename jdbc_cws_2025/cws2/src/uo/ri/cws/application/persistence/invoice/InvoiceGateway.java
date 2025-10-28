@@ -1,6 +1,7 @@
 package uo.ri.cws.application.persistence.invoice;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import uo.ri.cws.application.persistence.Gateway;
@@ -28,6 +29,8 @@ public interface InvoiceGateway extends Gateway<InvoiceRecord> {
 	 */
 	Long getNextInvoiceNumber() throws PersistenceException;
 	
+	List<InvoiceRecord> findUnpaidByVehicleId(String id);
+	
 	public static class InvoiceRecord extends BaseRecord {
 		
 		public double amount;	// total amount (money) vat included
@@ -36,4 +39,6 @@ public interface InvoiceGateway extends Gateway<InvoiceRecord> {
 		public LocalDate date;	// of the invoice
 		public String state;	// the state as in FacturaState
 	}
+
+	
 }
