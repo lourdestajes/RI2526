@@ -8,23 +8,23 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public class BaseRecordAssembler<T extends BaseRecord> {
-	
-	private Supplier<T> supplier;
-	
+
+    private Supplier<T> supplier;
+
     public BaseRecordAssembler(Supplier<T> supplier) {
-        this.supplier = Objects.requireNonNull(supplier);    
+        this.supplier = Objects.requireNonNull(supplier);
     }
 
+    public List<T> toRecordList(ResultSet rs) throws SQLException {
+        List<T> res = new ArrayList<>();
+        while (rs.next()) {
+            res.add(toRecord(rs));
+        }
+        return res;
+    }
 
-	public List<T> toRecordList(ResultSet rs) throws SQLException {
-		List<T> res = new ArrayList<>();
-		while (rs.next()) {
-			res.add(toRecord(rs));
-		}
-		return res;
-	}
-	public T toRecord(ResultSet m) throws SQLException {
-    	T dto = supplier.get();
+    public T toRecord(ResultSet m) throws SQLException {
+        T dto = supplier.get();
         dto.id = m.getString("id");
         dto.version = m.getLong("version");
         dto.entityState = m.getString("entityState");
@@ -32,5 +32,5 @@ public class BaseRecordAssembler<T extends BaseRecord> {
 //        dto.updatedAt = m.getTimestamp("updatedat").toLocalDateTime();
         return dto;
     }
-    
+
 }

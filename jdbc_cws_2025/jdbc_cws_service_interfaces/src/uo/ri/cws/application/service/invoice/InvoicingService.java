@@ -13,7 +13,17 @@ import uo.ri.util.exception.BusinessException;
  * principle (@see SOLID principles from RC Martin)
  */
 public interface InvoicingService {
-    
+    /**
+     * PROOF OF AUTHORSHIP 30/10/2025 model 2
+     * 
+     * Find the amount of money pending collection for unpaid bills.
+     * 
+     * @return A double that represents the amount of money pending collection
+     *         for unpaid bills.
+     * @throws BusinessException, DOES NOT
+     */
+    double findNotYetPaidAmount() throws BusinessException;
+
     /**
      * PROOF OF AUTHORSHIP 30/10/2025 model 1
      * 
@@ -23,10 +33,11 @@ public interface InvoicingService {
      * @param String that represents a license plate of a vehicle
      * @return List of WorkOrders of a vehicle.
      * @throws IllegalArgumentException when argument is null or empty string
-     *         BusinessException when the vehicle does not exist
+     *                                  BusinessException when the vehicle does
+     *                                  not exist
      */
     List<InvoiceDto> findInvoicesByVehicle(String plate)
-	throws BusinessException;
+            throws BusinessException;
 
     /**
      * Creates an invoice for the work orders indicated by its id. All the work
@@ -53,7 +64,7 @@ public interface InvoicingService {
      * @throws IllegalArgumentException if the nif is null
      */
     List<InvoicingWorkOrderDto> findWorkOrdersByClientNif(String nif)
-	throws BusinessException;
+            throws BusinessException;
 
     /**
      * Returns a list with not invoiced work orders of all the client's vehicles
@@ -64,7 +75,7 @@ public interface InvoicingService {
      * @throws IllegalArgumentException if nif is null
      */
     List<InvoicingWorkOrderDto> findNotInvoicedWorkOrdersByClientNif(String nif)
-	throws BusinessException;
+            throws BusinessException;
 
     /**
      * Returns a list with info of all the work orders of a vehicle
@@ -75,7 +86,7 @@ public interface InvoicingService {
      * @throws IllegalArgumentException if plate is null
      */
     List<InvoicingWorkOrderDto> findWorkOrdersByPlateNumber(String plate)
-	throws BusinessException;
+            throws BusinessException;
 
     /**
      * @param number, of the invoice
@@ -84,7 +95,7 @@ public interface InvoicingService {
      * @throws IllegalArgumentException if number is null
      */
     Optional<InvoiceDto> findInvoiceByNumber(Long number)
-	throws BusinessException;
+            throws BusinessException;
 
     /**
      * @param nif of the client
@@ -94,7 +105,7 @@ public interface InvoicingService {
      * @throws IllegalArgumentException if nif is null
      */
     List<PaymentMeanDto> findPayMeansByClientNif(String nif)
-	throws BusinessException;
+            throws BusinessException;
 
     /**
      * Creates the charges against the indicated payment means (with the amount
@@ -128,50 +139,50 @@ public interface InvoicingService {
      *                                  null
      */
     void settleInvoice(String invoiceId, Map<String, Double> charges)
-	throws BusinessException;
+            throws BusinessException;
 
     public static class InvoiceDto {
 
-	public String id; // the surrogate id (UUID)
-	public long version;
+        public String id; // the surrogate id (UUID)
+        public long version;
 
-	public double amount; // total amount (money) vat included
-	public double vat; // amount of vat (money)
-	public long number; // the invoice identity, a sequential number
-	public LocalDate date; // of the invoice
-	public String state; // the state as in InvoiceState
+        public double amount; // total amount (money) vat included
+        public double vat; // amount of vat (money)
+        public long number; // the invoice identity, a sequential number
+        public LocalDate date; // of the invoice
+        public String state; // the state as in InvoiceState
     }
 
     public static class InvoicingWorkOrderDto {
-	public String id;
-	public String description;
-	public LocalDateTime date;
-	public String state;
-	public double amount;
+        public String id;
+        public String description;
+        public LocalDateTime date;
+        public String state;
+        public double amount;
     }
 
     public static abstract class PaymentMeanDto {
-	public String id;
-	public long version;
+        public String id;
+        public long version;
 
-	public String clientId;
-	public double accumulated;
+        public String clientId;
+        public double accumulated;
     }
 
     public static class CashDto extends PaymentMeanDto {
     }
 
     public static class CardDto extends PaymentMeanDto {
-	public String cardNumber;
-	public LocalDate cardExpiration;
-	public String cardType;
+        public String cardNumber;
+        public LocalDate cardExpiration;
+        public String cardType;
 
     }
 
     public static class VoucherDto extends PaymentMeanDto {
-	public String code;
-	public String description;
-	public double available;
+        public String code;
+        public String description;
+        public double available;
 
     }
 }

@@ -7,22 +7,23 @@ import uo.ri.cws.application.persistence.base.BaseRecordAssembler;
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway.InvoiceRecord;
 
 public class RecordAssembler extends BaseRecordAssembler<InvoiceRecord> {
-    
-	public RecordAssembler() {
+
+    public RecordAssembler() {
         super(InvoiceRecord::new);
     }
 
-	public InvoiceRecord toRecord(ResultSet rs)
-			throws SQLException {
-		
-		InvoiceRecord result = super.toRecord(rs);
+    public InvoiceRecord toRecord(ResultSet rs)
+            throws SQLException {
 
-		result.date = rs.getDate("date").toLocalDate();
-		result.number = rs.getLong("number");
-		result.state = rs.getString("state");
-		result.vat = rs.getDouble("vat");
+        InvoiceRecord result = super.toRecord(rs);
 
-		return result;
-	}
+        result.date = rs.getDate("date")
+                        .toLocalDate();
+        result.number = rs.getLong("number");
+        result.state = rs.getString("state");
+        result.vat = rs.getDouble("vat");
+        result.amount = rs.getDouble("amount");
+        return result;
+    }
 
 }
