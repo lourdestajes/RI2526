@@ -25,7 +25,7 @@ public class CalculateTimeOnInterventionsCommand implements Command<Integer> {
 	@Override
 	public Integer execute() throws BusinessException {
 		checkMechanicExists();
-		return ig.findById(mechanicId).stream().mapToInt(i -> i.minutes).sum();
+		return ig.findByMechanicId(mechanicId).stream().mapToInt(i -> i.minutes).sum();
 	}
 
 	private void checkMechanicExists() throws BusinessException {
