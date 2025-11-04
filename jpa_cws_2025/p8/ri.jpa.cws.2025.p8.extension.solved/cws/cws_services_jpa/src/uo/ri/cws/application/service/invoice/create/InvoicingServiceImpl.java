@@ -7,6 +7,7 @@ import java.util.Optional;
 import uo.ri.conf.Factories;
 import uo.ri.cws.application.service.invoice.InvoicingService;
 import uo.ri.cws.application.service.invoice.create.command.CreateInvoiceFor;
+import uo.ri.cws.application.service.invoice.create.command.FindNotInvoicedWorkOrdersByClientNif;
 import uo.ri.cws.application.util.command.CommandExecutor;
 import uo.ri.util.exception.BusinessException;
 import uo.ri.util.exception.NotYetImplementedException;
@@ -18,7 +19,6 @@ public class InvoicingServiceImpl implements InvoicingService {
 	@Override
 	public InvoiceDto create(List<String> woIds)
 			throws BusinessException {
-
 		return executor.execute( new CreateInvoiceFor( woIds) );
 	}
 
@@ -31,7 +31,7 @@ public class InvoicingServiceImpl implements InvoicingService {
 	@Override
 	public List<InvoicingWorkOrderDto> findNotInvoicedWorkOrdersByClientNif(
 			String nif) throws BusinessException {
-		throw new NotYetImplementedException();
+		return executor.execute( new FindNotInvoicedWorkOrdersByClientNif(nif) );
 	}
 
 	@Override

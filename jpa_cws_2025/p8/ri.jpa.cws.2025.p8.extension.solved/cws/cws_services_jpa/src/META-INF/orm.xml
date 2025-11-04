@@ -5,7 +5,9 @@
 	version="3.1">
 	<!-- Contract queries -->
 	<named-query name="Contract.findAllInForce">
-		<query>select c from Contract c where c.state = 'IN_FORCE'</query>
+		<query>select c 
+		       from Contract c 
+		       where c.state = uo.ri.cws.domain.Contract.ContractState.IN_FORCE</query>
 	</named-query>
 
 	<named-query name="Contract.findByMechanicId">
@@ -41,6 +43,15 @@
 		</query>
 	</named-query>	
 	
+	<!-- Contract queries -->
+	<named-query name="ContractType.findByName">
+		<query>select t 
+		       from ContractType t 
+		       where t.name = ?1
+		</query>
+	</named-query>
+
+
 	<!-- Vehicle queries -->
 	<named-query name="Vehicle.findByPlate">
 		<query>select v from Vehicle v where v.plateNumber = ?1</query>
@@ -49,6 +60,16 @@
 	<!-- WorkOrder queries -->
 	<named-query name="WorkOrder.findByIds">
 		<query>select w from WorkOrder w where w.id in ?1</query>
+	</named-query>
+	
+	<named-query name="WorkOrder.findNotInvoicedByClientNif">
+		<query>select w 
+		       from WorkOrder w
+		       join w.vehicle v
+		       join v.client c 
+		       where c.nif = ?1
+		       and w.state = uo.ri.cws.domain.WorkOrder.WorkOrderState.FINISHED
+		</query>
 	</named-query>
 
 	<!-- PaymentMean queries -->

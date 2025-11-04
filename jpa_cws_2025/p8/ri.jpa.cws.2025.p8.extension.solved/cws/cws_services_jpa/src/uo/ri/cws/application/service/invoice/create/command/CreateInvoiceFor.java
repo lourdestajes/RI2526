@@ -37,6 +37,7 @@ public class CreateInvoiceFor implements Command<InvoiceDto> {
         assertAllWorkOrdersFinished ( workOrders );
         long numberInvoice = generateInvoiceNumber ( );
         Invoice result = new Invoice ( numberInvoice, workOrders );
+        invsRepo.add(result);
         return DtoAssembler.toDto ( result );
     }
 

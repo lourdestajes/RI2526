@@ -32,6 +32,7 @@ public class DeleteMechanic implements Command<Void> {
             .isEmpty ( ), "Mechanic has workOrders" );
         BusinessChecks.isTrue ( m.getInterventions ( )
             .isEmpty ( ), "Mechanic has interventions" );
+        BusinessChecks.isTrue ( m.getContracts().isEmpty ( ), "Mechanic has interventions" );
     }
 
     private Mechanic findMechanic ( String id ) throws BusinessException {

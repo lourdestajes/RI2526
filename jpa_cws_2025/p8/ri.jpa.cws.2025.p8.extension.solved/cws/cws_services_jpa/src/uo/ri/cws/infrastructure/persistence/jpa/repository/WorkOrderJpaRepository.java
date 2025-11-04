@@ -27,8 +27,7 @@ public class WorkOrderJpaRepository
 
 	@Override
 	public List<WorkOrder> findNotInvoicedByClientNif(String nif) {
-		// TODO Auto-generated method stub
-		return null;
+		return Jpa.getManager().createNamedQuery("WorkOrder.findNotInvoicedByClientNif", WorkOrder.class).setParameter(1, nif).getResultList();
 	}
 
 	@Override

@@ -13,8 +13,7 @@ public class ContractTypeJpaRepository
 
 	@Override
 	public Optional<ContractType> findByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return Jpa.getManager().createNamedQuery("ContractType.findByName", ContractType.class).setParameter(1, name).getResultStream().findFirst();
 	}
 
 }

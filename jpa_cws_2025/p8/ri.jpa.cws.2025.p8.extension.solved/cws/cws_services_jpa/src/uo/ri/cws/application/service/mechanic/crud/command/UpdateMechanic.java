@@ -19,6 +19,7 @@ public class UpdateMechanic implements Command<Void> {
     public UpdateMechanic ( MechanicDto dto ) {
         ArgumentChecks.isNotNull ( dto, "Cannot add a null mechanic" );
         ArgumentChecks.isNotBlank ( dto.id, "Id cannot be blank" );
+        ArgumentChecks.isNotBlank ( dto.nif, "Nif cannot be blank" );
         ArgumentChecks.isNotBlank ( dto.name, "Name cannot be blank" );
         ArgumentChecks.isNotBlank ( dto.surname, "Surname cannot be blank" );
         this.dto = dto;
@@ -26,6 +27,7 @@ public class UpdateMechanic implements Command<Void> {
 
     public Void execute ( ) throws BusinessException {
         Mechanic m = findMechanic ( dto.id );
+        BusinessChecks.hasVersion(m.getVersion(), dto.version);
         m.setName ( dto.name );
         m.setSurname ( dto.surname );
         return null;
