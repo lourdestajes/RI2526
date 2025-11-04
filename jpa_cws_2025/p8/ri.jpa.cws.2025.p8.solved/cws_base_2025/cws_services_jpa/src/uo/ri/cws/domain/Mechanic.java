@@ -14,83 +14,98 @@ import uo.ri.util.assertion.ArgumentChecks;
 @Entity
 @Table(name = "TMechanics")
 public class Mechanic extends BaseEntity {
-	// natural attributes
-	@Column(unique = true)
-	private String nif;
-	private String surname;
-	private String name;
+    // natural attributes
+    @Column(unique = true)
+    private String nif;
+    private String surname;
+    private String name;
 
-	// accidental attributes
-	@OneToMany(mappedBy="mechanic")
-	private Set<WorkOrder> assigned = new HashSet<>();
-	@OneToMany(mappedBy="mechanic") 
-	private Set<Intervention> interventions = new HashSet<>();
-	@OneToMany(mappedBy="mechanic")
-	private Set<Contract> contracts = new HashSet<>();
-	
-	Mechanic() {
-		// for JPA
-	}
-	
-	public Mechanic(String nif, String name, String surname) {
-		// check arguments (always), through IllegalArgumentException
-		ArgumentChecks.isNotBlank( nif, "NIF cannot be null or empty" );
-		ArgumentChecks.isNotBlank( surname, "Surname cannot be null or empty" );
-		ArgumentChecks.isNotBlank( name, "Name cannot be null or empty" );
-		
-		// store the attributes
-		this.nif = nif;
-		this.surname = surname;
-		this.name = name;
-	}
-	
-	public Mechanic(String nif) {
-		this(nif, "no-name", "no-surname");
-	}
+    // accidental attributes
+    @OneToMany(mappedBy = "mechanic")
+    private Set<WorkOrder> assigned = new HashSet<> ( );
+    @OneToMany(mappedBy = "mechanic")
+    private Set<Intervention> interventions = new HashSet<> ( );
+    @OneToMany(mappedBy = "mechanic")
+    private Set<Contract> contracts = new HashSet<> ( );
 
-	public String getNif() {
-		return nif;
-	}
+    Mechanic ( ) {
+        // for JPA
+    }
 
-	public String getSurname() {
-		return surname;
-	}
+    public Mechanic ( String nif, String name, String surname ) {
+        // check arguments (always), through IllegalArgumentException
+        ArgumentChecks.isNotBlank ( nif, "NIF cannot be null or empty" );
+        ArgumentChecks.isNotBlank ( surname,
+                "Surname cannot be null or empty" );
+        ArgumentChecks.isNotBlank ( name, "Name cannot be null or empty" );
 
-	public String getName() {
-		return name;
-	}
+        // store the attributes
+        this.nif = nif;
+        this.surname = surname;
+        this.name = name;
+    }
 
-	public Set<WorkOrder> getAssigned() {
-		return new HashSet<>( assigned );
-	}
+    public Mechanic ( String nif ) {
+        this ( nif, "no-name", "no-surname" );
+    }
 
-	Set<WorkOrder> _getAssigned() {
-		return assigned;
-	}
+    public String getNif ( ) {
+        return nif;
+    }
 
-	public Set<Intervention> getInterventions() {
-		return new HashSet<>( interventions );
-	}
+    public String getSurname ( ) {
+        return surname;
+    }
 
-	Set<Intervention> _getInterventions() {
-		return interventions;
-	}
+    public String getName ( ) {
+        return name;
+    }
 
-	public Set<Contract> getContracts() {
-		return new HashSet<>(contracts);
-	}
+    public Set<WorkOrder> getAssigned ( ) {
+        return new HashSet<> ( assigned );
+    }
 
-	Set<Contract> _getContracts() {
-		return contracts;
-	}
+    Set<WorkOrder> _getAssigned ( ) {
+        return assigned;
+    }
 
-	@Override
-	public String toString() {
-		return "Mechanic [nif=" + nif + ", surname=" + surname + ", name=" + name + "]";
-	}
+    public Set<Intervention> getInterventions ( ) {
+        return new HashSet<> ( interventions );
+    }
 
-	public Optional<Contract> getContractInForce() {
-		Optional<Contract> optional = contracts.stream().filter(c -> c.isInForce()).findFirst();
-		return optional;
-	}
+    Set<Intervention> _getInterventions ( ) {
+        return interventions;
+    }
+
+    public Set<Contract> getContracts ( ) {
+        return new HashSet<> ( contracts );
+    }
+
+    Set<Contract> _getContracts ( ) {
+        return contracts;
+    }
+
+    public void setName ( String name ) {
+        ArgumentChecks.isNotBlank ( name, "Name cannot be blank" );
+        this.name = name;
+    }
+
+    public void setSurname ( String surname ) {
+        ArgumentChecks.isNotBlank ( surname, "Surname cannot be blank" );
+        this.surname = surname;
+    }
+
+    @Override
+    public String toString ( ) {
+        return "Mechanic [nif=" + nif + ", surname=" + surname + ", name="
+                + name + "]";
+    }
+
+    public Optional<Contract> getContractInForce ( ) {
+        Optional<Contract> optional = contracts.stream ( )
+            .filter ( c -> c.isInForce ( ) )
+            .findFirst ( );
+        return optional;
+    }
+
 }

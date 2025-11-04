@@ -10,19 +10,20 @@ import uo.ri.cws.application.util.command.Command;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessException;
 
-public class FindMechanicByNif implements Command<Optional<MechanicDto>>{
+public class FindMechanicByNif implements Command<Optional<MechanicDto>> {
 
-	private String nif;
-	private MechanicRepository repo = Factories.repository.forMechanic();
+    private String nif;
+    private MechanicRepository repo = Factories.repository.forMechanic ( );
 
-	public FindMechanicByNif(String nif) {
-		ArgumentChecks.isNotEmpty( nif );
-		this.nif = nif;
-	}
+    public FindMechanicByNif ( String nif ) {
+        ArgumentChecks.isNotEmpty ( nif );
+        this.nif = nif;
+    }
 
-	@Override
-	public Optional<MechanicDto> execute() throws BusinessException {
-		return repo.findByNif( nif ).map( m -> DtoAssembler.toDto( m ) );
-	}
+    @Override
+    public Optional<MechanicDto> execute ( ) throws BusinessException {
+        return repo.findByNif ( nif )
+            .map ( m -> DtoAssembler.toDto ( m ) );
+    }
 
 }
