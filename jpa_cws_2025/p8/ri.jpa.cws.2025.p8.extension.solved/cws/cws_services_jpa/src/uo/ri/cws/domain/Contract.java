@@ -169,8 +169,8 @@ public class Contract extends BaseEntity {
         return "Contract [mechanic=" + mechanic + ", startDate=" + startDate
                 + ", endDate=" + endDate + ", annualBaseSalary="
                 + annualBaseSalary + ", settlement=" + settlement + ", taxRate="
-                + taxRate + ", state=" + state + ", payrolls=" + payrolls
-                + ", type=" + contractType + ", professionalGroup="
+                + taxRate + ", state=" + state + ", type=" + contractType
+                + ", professionalGroup="
                 + professionalGroup + "]";
     }
 
@@ -240,5 +240,15 @@ public class Contract extends BaseEntity {
         }
     }
 
+	public void setAnnualBaseSalary(double arg) {
+		ArgumentChecks.isTrue(arg > 0, "Invalid annual base salary");
+		this.annualBaseSalary = arg;
+	}
+
+	public void setEndDate(LocalDate arg) {
+		ArgumentChecks.isNotNull(arg, "Invalid null end date");
+		ArgumentChecks.isTrue(arg.isAfter(this.startDate), "Invalid end date is not after start date");
+		this.endDate= arg;
+	}
 
 }

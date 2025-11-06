@@ -10,11 +10,11 @@ import io.cucumber.junit.platform.engine.Constants;
 
 // common basic tests 
 @SelectClasspathResource("uo/ri/cws/application/service/mechanic")
-//@SelectClasspathResource("uo/ri/cws/application/service/invoice")
-//@SelectClasspathResource("uo/ri/cws/application/service/workorder")
+@SelectClasspathResource("uo/ri/cws/application/service/invoice")
+@SelectClasspathResource("uo/ri/cws/application/service/workorder")
 
 // UO % 3 == 0 tests
-//@SelectClasspathResource("uo/ri/cws/application/service/payroll")
+@SelectClasspathResource("uo/ri/cws/application/service/payroll")
 @SelectClasspathResource("uo/ri/cws/application/service/contracttype")
 @SelectClasspathResource("uo/ri/cws/application/service/mechanicext")
 

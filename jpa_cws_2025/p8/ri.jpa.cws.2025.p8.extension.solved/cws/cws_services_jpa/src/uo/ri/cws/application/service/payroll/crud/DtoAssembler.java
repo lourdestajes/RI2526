@@ -2,6 +2,7 @@ package uo.ri.cws.application.service.payroll.crud;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import uo.ri.cws.application.service.payroll.PayrollService.PayrollDto;
 import uo.ri.cws.application.service.payroll.PayrollService.PayrollSummaryDto;
@@ -56,5 +57,13 @@ public class DtoAssembler {
 		}
 		return result;
 	}
+
+    public static Optional<PayrollDto> toOptionalDto(Optional<Payroll> arg) {
+        Optional<PayrollDto> o = Optional.empty();
+        if (arg.isPresent()) {
+            o = Optional.of(toDto(arg.get()));
+        }
+        return o;
+    }
 
 }

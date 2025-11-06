@@ -1,11 +1,11 @@
-package uo.ri.cws.application.service.contracttype.crud.command;
+package uo.ri.cws.application.service.professionalgroup.crud.command;
 
 import java.util.Optional;
 
 import uo.ri.conf.Factories;
-import uo.ri.cws.application.repository.ContractTypeRepository;
-import uo.ri.cws.application.service.contracttype.ContractTypeCrudService.ContractTypeDto;
-import uo.ri.cws.application.service.contracttype.crud.DtoAssembler;
+import uo.ri.cws.application.repository.ProfessionalGroupRepository;
+import uo.ri.cws.application.service.professionalgroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
+import uo.ri.cws.application.service.professionalgroup.crud.DtoAssembler;
 import uo.ri.cws.application.util.command.Command;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessException;
@@ -18,19 +18,19 @@ import uo.ri.util.exception.BusinessException;
  * 		empty if does not exist the contract type
  * @throws BusinessException DOES NOT
  */
-public class FindContractTypeByNameCommand implements Command<Optional<ContractTypeDto>> {
+public class FindProfessionalGroupByNameCommand implements Command<Optional<ProfessionalGroupDto>> {
 
 	private String name;
-	private ContractTypeRepository repo = Factories.repository.forContractType();
+	private ProfessionalGroupRepository repo = Factories.repository.forProfessionalGroup();
 
 
-	public FindContractTypeByNameCommand(String name) {
+	public FindProfessionalGroupByNameCommand(String name) {
         ArgumentChecks.isNotBlank ( name, "Name cannot be blank" );
         this.name = name;
 	}
 
 	@Override
-	public Optional<ContractTypeDto> execute() throws BusinessException {
+	public Optional<ProfessionalGroupDto> execute() throws BusinessException {
 		return DtoAssembler.toOptionalDto( repo.findByName(name) );
 
 	}

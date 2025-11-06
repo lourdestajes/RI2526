@@ -59,5 +59,15 @@ public class ProfessionalGroup extends BaseEntity {
 		return "ProfessionalGroup [name=" + name + ", trienniumSalary=" + trienniumPayment + ", productivityPlus="
 				+ productivityRate + "]";
 	}
+
+	public void setTrienniumPayment(double pay) {
+		ArgumentChecks.isTrue(trienniumPayment > 0, "Triennium cannot be negative");
+		this.trienniumPayment = pay;
+	}
 	
+	public void setProductivityRate(double pay) {
+		ArgumentChecks.isTrue(productivityRate> 0, "Productivity cannot be negative");
+		this.productivityRate = pay;
+		
+	}
 }

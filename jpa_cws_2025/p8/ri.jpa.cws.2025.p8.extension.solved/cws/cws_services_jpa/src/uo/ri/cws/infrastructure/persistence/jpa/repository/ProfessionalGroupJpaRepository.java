@@ -13,8 +13,7 @@ public class ProfessionalGroupJpaRepository
 
 	@Override
 	public Optional<ProfessionalGroup> findByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return Jpa.getManager().createNamedQuery("ProfessionalGroup.findByName", ProfessionalGroup.class).setParameter(1, name).getResultStream().findFirst();
 	}
 
 

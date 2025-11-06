@@ -38,16 +38,24 @@
 		<query>
 			select c
 			from Contract c 
-            where c.state='IN_FORCE' or
-            c.endDate between ?1 and ?2
+            where c.state=uo.ri.cws.domain.Contract.ContractState.IN_FORCE 
+            or c.endDate between ?1 and ?2
 		</query>
 	</named-query>	
 	
-	<!-- Contract queries -->
 	<named-query name="ContractType.findByName">
 		<query>select t 
 		       from ContractType t 
 		       where t.name = ?1
+		</query>
+	</named-query>
+
+
+	<!-- Professional group queries -->
+	<named-query name="ProfessionalGroup.findByName">
+		<query>select g 
+		       from ProfessionalGroup g 
+		       where g.name = ?1
 		</query>
 	</named-query>
 
@@ -109,6 +117,61 @@
 -->
 	</named-query>
 
+	<!-- Payroll queries-->
+	<named-query name="Payroll.findByContractId">
+		<query>
+			select p from Payroll p
+			join p.contract c
+			where c.id = ?1
+		</query>
+	</named-query>
+	
+	<named-query name="Payrolls.getAllInMonth">
+		<query>
+			select p from Payroll p
+			where p.date between ?1 and ?2 
+		</query>
+	</named-query>
+
+	<named-query name="Payrolls.getLastMonthByMechanicId">
+		<query>
+			select p from Payroll p
+			join p.contract c
+			join c.mechanic m
+			where p.date between ?1 and ?2
+			and m.id = ?3 
+		</query>
+	</named-query>
+
+	<named-query name="Payrolls.getByProfGroupName">
+		<query>
+			select p from Payroll p
+			join p.contract c
+			join c.professionalGroup g
+			where g.name = ?1  
+		</query>
+	</named-query>
+
+	<named-query name="Payrolls.getByMechanicId">
+		<query>
+			select p from Payroll p
+			join p.contract c
+			join c.mechanic m
+			where m.id = ?1  
+		</query>
+	</named-query>	
+	
+	<named-query name="Payrolls.getByContractIdAndDate">
+		<query>
+			select p from Payroll p
+			join p.contract c
+			where c.id = ?1
+			and p.date = ?2  
+		</query>
+	</named-query>
+	
+	
+	
 	<!-- 
 	Use this format if your query has greater than numeric comparisons the one
 	in this example

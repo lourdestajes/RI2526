@@ -38,9 +38,12 @@ public class ContractJpaRepository
 
 	@Override
 	public List<Contract> findAllInForceThisMonth(LocalDate present) {
-		LocalDate startDate = LocalDate.now().withDayOfMonth(1);
-		LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+//		LocalDate startDate = LocalDate.now().withDayOfMonth(1);
+//		LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 		
+        LocalDate startDate = present.withDayOfMonth(1);
+        LocalDate endDate = startDate.plusMonths(1)
+            .minusDays(1);
 		return Jpa.getManager().createNamedQuery("Contract.findAllInForceThisMonth", Contract.class)
 				.setParameter(1, startDate)
 				.setParameter(2, endDate)

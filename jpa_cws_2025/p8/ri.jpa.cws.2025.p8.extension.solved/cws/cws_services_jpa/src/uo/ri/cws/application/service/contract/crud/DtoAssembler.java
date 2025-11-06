@@ -1,6 +1,7 @@
 package uo.ri.cws.application.service.contract.crud;
 
 import java.util.List;
+import java.util.Optional;
 
 import uo.ri.cws.application.service.contract.ContractCrudService.ContractDto;
 import uo.ri.cws.application.service.contract.ContractCrudService.ContractSummaryDto;
@@ -43,6 +44,7 @@ public class DtoAssembler {
 		result.state = arg.getState().toString();
 		result.nif = arg.getMechanic().getNif();
 		result.settlement = arg.getSettlement();
+		result.numPayrolls = arg.getPayrolls().size();
 		return result;
 	}
 
@@ -52,6 +54,14 @@ public class DtoAssembler {
 
 	public static List<ContractDto> toDtoList(List<Contract> contracts) {
 		return contracts.stream().map( c -> toDto(c) ).toList();
+	}
+
+	public static Optional<ContractDto> toOptionalDto(Optional<Contract> arg) {
+		Optional<ContractDto> result = Optional.empty();
+		if (arg.isPresent()) {
+			result = Optional.of(toDto(arg.get()));
+		}
+		return result;
 	}
 
 }

@@ -10,6 +10,7 @@ import uo.ri.util.exception.BusinessException;
 
 public class FindAllContractsCommand implements Command<List<ContractSummaryDto>> {
 
+	
 	@Override
 	public List<ContractSummaryDto> execute() throws BusinessException {
 		

@@ -1,6 +1,5 @@
 package uo.ri.cws.application.service.professionalgroup.crud;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +9,7 @@ import uo.ri.cws.domain.ProfessionalGroup;
 public class DtoAssembler {
 
 
-	public static Optional<ProfessionalGroupDto> toProfessionalGroupDto(Optional<ProfessionalGroup> arg) {
+	public static Optional<ProfessionalGroupDto> toOptionalDto(Optional<ProfessionalGroup> arg) {
 		ProfessionalGroupDto dto = null;
 		
 		if (arg.isPresent()) {
@@ -19,12 +18,8 @@ public class DtoAssembler {
 		return Optional.ofNullable(dto);
 	}
 
-	public static List<ProfessionalGroupDto> toProfessionalGroupDtoList(List<ProfessionalGroup> list) {
-		List<ProfessionalGroupDto> res = new ArrayList<>();
-		for (ProfessionalGroup m : list) {
-			res.add(toDto(m));
-		}
-		return res;
+	public static List<ProfessionalGroupDto> toDtoList(List<ProfessionalGroup> list) {
+		return list.stream().map(DtoAssembler::toDto).toList();
 	}
 	
 	private static ProfessionalGroupDto toDto(ProfessionalGroup m) {
@@ -37,4 +32,6 @@ public class DtoAssembler {
 		dto.trienniumPayment = m.getTrienniumPayment();
 		return dto;
 	}
+
+
 }
