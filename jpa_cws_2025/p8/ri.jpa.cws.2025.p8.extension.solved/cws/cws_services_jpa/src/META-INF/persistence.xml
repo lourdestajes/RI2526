@@ -13,6 +13,7 @@
     <persistence-unit name="carworkshop">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <mapping-file>META-INF/orm.xml</mapping-file>
+        <mapping-file>META-INF/entities.xml</mapping-file>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <shared-cache-mode>NONE</shared-cache-mode>
 

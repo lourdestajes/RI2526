@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+                                     http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd"
+                 version="2.2">
+
+    <!-- Optional: package for all entity classes (avoids repeating full package names) -->
+    <package>uo.ri.cws.domain</package>
+
+    <!-- ================== -->
+    <!--  ENTITIES BELOW    -->
+    <!-- ================== -->
+
+   <!-- Mapped Superclass -->
+   <mapped-superclass class="BaseEntity">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="SEQUENCE"/>
+            </id>
+            <version name="version"/>
+        </attributes>
+    </mapped-superclass>
+    
+    <!-- Embeddable (for @Embeddable classes) -->
+    <embeddable class="Address" >
+        <attributes>
+            <basic name="street"/>
+            <basic name="city"/>
+            <basic name="zipCode"/>
+        </attributes>
+    </embeddable>
+    
+    
+    <!-- Client -->
+    <entity class="Client">
+        <table name="TCLIENTS"/>
+        <embedded-id name="id"/>
+
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="nif">
+                <column name="nif" nullable="false" length="50" unique="true"/>
+            </basic>
+            <basic name="name">
+                <column name="name"/>
+            </basic>
+            <basic name="surname">
+                <column name="surname"/>
+            </basic>
+            <basic name="email">
+                <column name="EMAIL"/>
+            </basic>
+            <basic name="phone">
+                <column name="phone"/>
+            </basic>
+            <basic name="createdDate">
+                <temporal>TIMESTAMP</temporal>
+                <column name="CREATED_DATE"/>
+            </basic>
+        </attributes>
+    </entity>
+
+
+    <!-- 1. Simple Entity -->
+    <entity class="User" access="FIELD">
+        <table name="USERS"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="username">
+                <column name="USERNAME" nullable="false" length="50" unique="true"/>
+            </basic>
+            <basic name="email">
+                <column name="EMAIL" length="100"/>
+            </basic>
+            <basic name="createdDate">
+                <temporal>TIMESTAMP</temporal>
+                <column name="CREATED_DATE"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <!-- 2. Entity with EmbeddedId -->
+    <entity class="OrderLine" access="FIELD">
+        <table name="ORDER_LINES"/>
+        <embedded-id name="id"/>
+        <attributes>
+            <basic name="quantity"/>
+            <many-to-one name="order" fetch="LAZY">
+                <join-column name="ORDER_ID" referenced-column-name="ID"/>
+            </many-to-one>
+            <many-to-one name="product" fetch="LAZY">
+                <join-column name="PRODUCT_ID"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+    <!-- 3. Mapped Superclass (optional, if you use them) -->
+    <mapped-superclass class="BaseEntity">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="SEQUENCE"/>
+            </id>
+            <version name="version"/>
+        </attributes>
+    </mapped-superclass>
+
+    <!-- 4. Embeddable (for @Embeddable classes) -->
+    <embeddable class="Address" access="FIELD">
+        <attributes>
+            <basic name="street"/>
+            <basic name="city"/>
+            <basic name="zipCode"/>
+        </attributes>
+    </embeddable>
+
+    <!-- 5. Entity using Embeddable -->
+    <entity class="Customer">
+        <table name="CUSTOMERS"/>
+        <embedded name="address"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="AUTO"/>
+            </id>
+            <basic name="name"/>
+        </attributes>
+    </entity>
+
+    <!-- 6. One-to-Many / Many-to-One bidirectional example -->
+    <entity class="Department">
+        <table name="DEPTS"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="name"/>
+            <one-to-many name="employees" mapped-by="department" fetch="LAZY"/>
+        </attributes>
+    </entity>
+
+    <entity class="Employee">
+        <table name="EMPS"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="name"/>
+            <many-to-one name="department" fetch="LAZY">
+                <join-column name="DEPT_ID"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+    <!-- 7. Named Queries -->
+    <named-query name="User.findByUsername">
+        <query><![CDATA[
+            SELECT u FROM User u WHERE u.username = :username
+        ]]></query>
+    </named-query>
+
+    <named-native-query name="User.findAllNative">
+        <query>SELECT * FROM USERS</query>
+    </named-native-query>
+
+</entity-mappings>
