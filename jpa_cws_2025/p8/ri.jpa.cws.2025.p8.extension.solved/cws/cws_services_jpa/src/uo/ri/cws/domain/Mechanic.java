@@ -4,28 +4,24 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-@Entity
-@Table(name = "TMechanics")
+//@Entity
+//@Table(name = "TMechanics")
 public class Mechanic extends BaseEntity {
     // natural attributes
-    @Column(unique = true)
+//    @Column(unique = true)
     private String nif;
     private String surname;
     private String name;
 
     // accidental attributes
-    @OneToMany(mappedBy = "mechanic")
+//    @OneToMany(mappedBy = "mechanic")
     private Set<WorkOrder> assigned = new HashSet<> ( );
-    @OneToMany(mappedBy = "mechanic")
+//    @OneToMany(mappedBy = "mechanic")
     private Set<Intervention> interventions = new HashSet<> ( );
-    @OneToMany(mappedBy = "mechanic")
+//    @OneToMany(mappedBy = "mechanic")
     private Set<Contract> contracts = new HashSet<> ( );
 
     Mechanic ( ) {

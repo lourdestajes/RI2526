@@ -3,27 +3,26 @@ package uo.ri.cws.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-@Entity(name = "TCLIENTS")
+//@Entity(name = "TCLIENTS")
 public class Client extends BaseEntity {
-	@Column(unique = true) private String nif; 
+//	@Column(unique = true) 
+	private String nif; 
 	private String name;
 	private String surname;
 	private String email;
 	private String phone;
-	@Embedded
+//	@Embedded
+	@Transient
 	private Address address;
 
 	// Atributos accidentales
-	@OneToMany(mappedBy = "client")
+//	@OneToMany(mappedBy = "client")
 	private Set<Vehicle> vehicles = new HashSet<>();
-	@OneToMany(mappedBy = "client")
+//	@OneToMany(mappedBy = "client")
 	private Set<PaymentMean> paymentMeans = new HashSet<>();
 	
 	Client() {

@@ -3,26 +3,24 @@ package uo.ri.cws.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-@Entity
-@Table(name = "TVehicles")
+//@Entity
+//@Table(name = "TVehicles")
 public class Vehicle extends BaseEntity {
-	@Column(unique=true)
+//	@Column(unique=true)
 	private String plateNumber;
 	private String make;
 	private String model;
 	
 	// Atributos accidentales
-	@ManyToOne private Client client;
-	@ManyToOne private VehicleType vehicleType;
-	@OneToMany(mappedBy="vehicle") private Set<WorkOrder> workOrders = new HashSet<>();
+//	@ManyToOne 
+	private Client client;
+//	@ManyToOne 
+	private VehicleType vehicleType;
+//	@OneToMany(mappedBy="vehicle") 
+	private Set<WorkOrder> workOrders = new HashSet<>();
 
 	Vehicle() {
 		// for JPA

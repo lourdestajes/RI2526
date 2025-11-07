@@ -43,6 +43,14 @@ public abstract class BaseEntity {
 		return version;
 	}
 	
+	public void updatedNow() {
+		updatedAt = LocalDateTime.now();
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -71,14 +79,6 @@ public abstract class BaseEntity {
 			return false;
 		}
 		return true;
-	}
-
-	public void updatedNow() {
-		updatedAt = LocalDateTime.now();
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
 	}
 
 }

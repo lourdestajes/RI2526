@@ -8,39 +8,43 @@
     <!-- Optional: package for all entity classes (avoids repeating full package names) -->
     <package>uo.ri.cws.domain</package>
 
+<!-- ================================================================ -->
+<!--  STRUCTURE OF THE FILE                                           -->
+<!-- <entity-mappings>                                                -->
+<!--     1. <package>?                                                -->
+<!--     2. <schema>?                                                 -->
+<!--     3. <catalog>?                                                -->
+<!--     4. <access>?                                                 -->
+<!--     5. <sequence-generator>*                                     -->
+<!--     6. <table-generator>*                                        -->
+<!--     7. <named-query>*                                            -->
+<!--     8. <named-native-query>*                                     -->
+<!--     9. <sql-result-set-mapping>*                                 -->
+<!--    10. <embeddable>*          ← You put it here                  -->
+<!--    11. <mapped-superclass>*   ← BaseEntity should be here        -->
+<!--                                 EclipseLink does not support it  -->
+<!--    12. <entity>*              ← Client goes here                 -->
+<!-- </entity-mappings>                                               -->
+<!-- ================================================================ -->
+
     <!-- ================== -->
     <!--  ENTITIES BELOW    -->
     <!-- ================== -->
 
-   <!-- Mapped Superclass -->
-   <mapped-superclass class="BaseEntity">
-        <attributes>
-            <id name="id">
-                <generated-value strategy="SEQUENCE"/>
-            </id>
-            <version name="version"/>
-        </attributes>
-    </mapped-superclass>
-    
-    <!-- Embeddable (for @Embeddable classes) -->
-    <embeddable class="Address" >
-        <attributes>
-            <basic name="street"/>
-            <basic name="city"/>
-            <basic name="zipCode"/>
-        </attributes>
-    </embeddable>
-    
-    
-    <!-- Client -->
+<!-- ================================================================= -->
+<!--  <basic> tells JPA: “This field is a simple, non-relationship     -->
+<!--                    value — map it directly to a database column.” -->
+<!-- It is the XML equivalent of the @Basic annotation                 --> 
+<!--  (which is optional in Java, but required in XML).                -->
+<!-- ================================================================= -->
+   
+<!-- ====================== Client ====================== -->  
     <entity class="Client">
         <table name="TCLIENTS"/>
-        <embedded-id name="id"/>
-
         <attributes>
-            <id name="id">
-                <generated-value strategy="IDENTITY"/>
-            </id>
+            <!-- Inherit everything from BaseEntity automatically -->
+
+            <!-- Client-specific fields -->
             <basic name="nif">
                 <column name="nif" nullable="false" length="50" unique="true"/>
             </basic>
@@ -56,114 +60,67 @@
             <basic name="phone">
                 <column name="phone"/>
             </basic>
-            <basic name="createdDate">
-                <temporal>TIMESTAMP</temporal>
-                <column name="CREATED_DATE"/>
-            </basic>
+            <one-to-many name="vehicles" mapped-by="client"/>
+            <one-to-many name="paymentMeans" mapped-by="client"/>
         </attributes>
     </entity>
 
-
-    <!-- 1. Simple Entity -->
-    <entity class="User" access="FIELD">
-        <table name="USERS"/>
+<!-- ====================== Mechanic ====================== -->  
+    <entity class="Mechanic">
+        <table name="TMECHANICS"/>
         <attributes>
-            <id name="id">
-                <generated-value strategy="IDENTITY"/>
-            </id>
-            <basic name="username">
-                <column name="USERNAME" nullable="false" length="50" unique="true"/>
+            <!-- Inherit everything from BaseEntity automatically -->
+
+            <!-- Mechanic-specific fields -->
+            <basic name="nif">
+                <column name="nif" unique="true"/>
             </basic>
-            <basic name="email">
-                <column name="EMAIL" length="100"/>
+            <basic name="name">
+                <column name="name"/>
             </basic>
-            <basic name="createdDate">
-                <temporal>TIMESTAMP</temporal>
-                <column name="CREATED_DATE"/>
+            <basic name="surname">
+                <column name="surname"/>
             </basic>
+            <one-to-many name="assigned" mapped-by="mechanic"/>
+            <one-to-many name="interventions" mapped-by="mechanic"/>
+            <one-to-many name="contracts" mapped-by="mechanic"/>
         </attributes>
     </entity>
-
-    <!-- 2. Entity with EmbeddedId -->
-    <entity class="OrderLine" access="FIELD">
-        <table name="ORDER_LINES"/>
-        <embedded-id name="id"/>
+    
+    <!-- ====================== Vehicle ====================== -->
+    <entity class="Vehicle">
+        <table name="TVEHICLES"/>
         <attributes>
-            <basic name="quantity"/>
-            <many-to-one name="order" fetch="LAZY">
-                <join-column name="ORDER_ID" referenced-column-name="ID"/>
+            <!-- Inherit everything from BaseEntity automatically -->
+
+            <!-- Mechanic-specific fields -->
+            <basic name="plateNumber" >
+                <column name="platenumber" unique="true"/>
+            </basic>
+            <basic name="make"/>
+            <basic name="model"/>
+            <many-to-one name="client" target-entity="Client">
+                <join-column name="client_id" referenced-column-name="id" />
             </many-to-one>
-            <many-to-one name="product" fetch="LAZY">
-                <join-column name="PRODUCT_ID"/>
+            <many-to-one name="vehicleType" target-entity="VehicleType">
+                <join-column name="vehicleType_id" referenced-column-name="id" />
             </many-to-one>
+            <one-to-many name="workOrders" mapped-by="vehicle"/>
         </attributes>
     </entity>
-
-    <!-- 3. Mapped Superclass (optional, if you use them) -->
-    <mapped-superclass class="BaseEntity">
+    
+        <!-- ====================== VehicleType ====================== -->
+    <entity class="VehicleType">
+        <table name="TVEHICLETYPES"/>
         <attributes>
-            <id name="id">
-                <generated-value strategy="SEQUENCE"/>
-            </id>
-            <version name="version"/>
-        </attributes>
-    </mapped-superclass>
+            <!-- Inherit everything from BaseEntity automatically -->
 
-    <!-- 4. Embeddable (for @Embeddable classes) -->
-    <embeddable class="Address" access="FIELD">
-        <attributes>
-            <basic name="street"/>
-            <basic name="city"/>
-            <basic name="zipCode"/>
-        </attributes>
-    </embeddable>
-
-    <!-- 5. Entity using Embeddable -->
-    <entity class="Customer">
-        <table name="CUSTOMERS"/>
-        <embedded name="address"/>
-        <attributes>
-            <id name="id">
-                <generated-value strategy="AUTO"/>
-            </id>
-            <basic name="name"/>
+            <!-- Mechanic-specific fields -->
+            <basic name="name" >
+                <column name="name" unique="true"/>
+            </basic>
+            <basic name="pricePerHour"/>
+            <one-to-many name="vehicles" mapped-by="vehicleType"/>
         </attributes>
     </entity>
-
-    <!-- 6. One-to-Many / Many-to-One bidirectional example -->
-    <entity class="Department">
-        <table name="DEPTS"/>
-        <attributes>
-            <id name="id">
-                <generated-value strategy="IDENTITY"/>
-            </id>
-            <basic name="name"/>
-            <one-to-many name="employees" mapped-by="department" fetch="LAZY"/>
-        </attributes>
-    </entity>
-
-    <entity class="Employee">
-        <table name="EMPS"/>
-        <attributes>
-            <id name="id">
-                <generated-value strategy="IDENTITY"/>
-            </id>
-            <basic name="name"/>
-            <many-to-one name="department" fetch="LAZY">
-                <join-column name="DEPT_ID"/>
-            </many-to-one>
-        </attributes>
-    </entity>
-
-    <!-- 7. Named Queries -->
-    <named-query name="User.findByUsername">
-        <query><![CDATA[
-            SELECT u FROM User u WHERE u.username = :username
-        ]]></query>
-    </named-query>
-
-    <named-native-query name="User.findAllNative">
-        <query>SELECT * FROM USERS</query>
-    </named-native-query>
-
 </entity-mappings>
